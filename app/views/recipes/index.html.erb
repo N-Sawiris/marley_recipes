@@ -1,23 +1,21 @@
-<h1>Recipes</h1>
+<div class="title-container">
+  <h1>Recipes</h1>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Image</th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @recipes.each do |recipe| %>
-      <tr>
-        <td><%= recipe.title %></td>
-        <td><%= recipe.image %></td>
-        <td><%= link_to "Show", recipe_path(recipe) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
+<div class="recipes">
+  <% @recipes.each do |recipe| %>
+    <div class="recipe">
+      <div class="thumbnail">
+        <div class="caption">
+          <%= link_to recipe_path(recipe) do %>
+            <%= image_tag(recipe.image, class: "img-responsive img-thumbnail") %>
+          <% end %>
+          <h3><%= link_to recipe.title, recipe_path(recipe) %></h3>
+          <p>
+            <%= link_to 'Show', recipe_path(recipe), class: "btn btn-default" %>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
