@@ -19,3 +19,13 @@
     </div>
   <% end %>
 </div>
+<div class="recipes">
+  <div>
+  <% if @page > 1 %>
+    <%= link_to 'previous Page', recipes_path(page: @page - 1) %> 
+  <% end %>
+  <% if @more_recipes %>
+    <%= link_to 'Next Page', recipes_path(page: @page +1) %>
+  <% end %>
+  </div>
+</div>
