@@ -7,12 +7,12 @@
     <div class="recipe">
       <div class="thumbnail">
         <div class="caption">
-          <%= link_to recipe_path(recipe) do %>
+          <%= link_to recipe_path(recipe.image_id) do %>
             <%= image_tag(recipe.image, class: "img-responsive img-thumbnail") %>
           <% end %>
-          <h3><%= link_to recipe.title, recipe_path(recipe) %></h3>
+          <h3><%= link_to recipe.title, recipe_path(recipe.image_id) %></h3>
           <p>
-            <%= link_to 'Show', recipe_path(recipe), class: "btn btn-default" %>
+            <%= link_to 'Show', recipe_path(recipe.image_id), class: "btn btn-default" %>
           </p>
         </div>
       </div>

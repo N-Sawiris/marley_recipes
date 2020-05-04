@@ -1,26 +1,61 @@
 class Recipe
 
-  attr_accessor :title, :image, :tags, :description, :chef_name
-  attr_reader :id
+  attr_accessor :id, :title, :image, :tags, :description, :chef_name, :image_id
 
-  def initialize(id = 0,title = '', image = '', tags = [], description = '', chef_name = '')
+  def initialize(id = 0,title = '', image = '', image_id = '', tags = [], description = '', chef_name = '')
+    @id = id
     @title = title
     @image = image
     @tags = tags.dup
     @description = description
     @chef_name = chef_name
+    @image_id = image_id
   end
 
   def self.get_all_recipes
-    desc = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-    recipe = Recipe.new(1, "What is Lorem Ipsum?", "https://marleyspoon.com/media/recipes/47168/main_photos/large/oregano_pork_steaks-04d719dabf2420ebe5d4e2e76f733605.jpeg",[], desc, "John")
-    recipe
-    [recipe]
+    url = "https://cdn.contentful.com/spaces/#{space}/environments/master/entries?access_token=#{Rails.application.credentials.contentful_token}&content_type=recipe&select=sys.id,fields.title,fields.photo"#&limit=3&skip=1"
+    response = Faraday.get(url, {}, {'Accept' => 'application/json'})
+    recipes_json = JSON.parse(response.body)
+
+    images = Hash.new
+    recipes_json['includes']['Asset'].each do |asset|
+      images[asset['sys']['id']] = "https:#{asset['fields']['file']['url']}"
+    end
+    recipes = Array.new
+    recipes_json["items"].each do |recipe|
+      image_id = recipe['fields']['photo']['sys']['id']
+      recipes << Recipe.new(recipe["sys"]["id"], recipe["fields"]["title"], images[recipe['fields']['photo']['sys']['id']], image_id)
+
+    end
+
+    recipes
   end
 
-  def self.get_recipe
-    desc = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-    @recipe = Recipe.new(1, "What is Lorem Ipsum?", "https://marleyspoon.com/media/recipes/47168/main_photos/large/oregano_pork_steaks-04d719dabf2420ebe5d4e2e76f733605.jpeg",[], desc, "John")
+  def self.get_recipe(photo_id)
+    url = "https://cdn.contentful.com/spaces/#{space}/environments/master/entries?access_token=#{Rails.application.credentials.contentful_token}&include=2&content_type=recipe&fields.photo.sys.id=#{photo_id}"
+
+    response = Faraday.get(url, {}, {'Accept' => 'application/json'})
+    recipe_json = JSON.parse(response.body)
+
+    @recipe = Recipe.new
+
+    @recipe.id = recipe_json['items'][0]['sys']['id']
+    @recipe.title = recipe_json['items'][0]['fields']['title']
+    @recipe.description = recipe_json['items'][0]['fields']['description']
+    recipe_json['includes']['Asset'].each do |asset|
+      @recipe.image = "https:#{asset['fields']['file']['url']}" if asset['fields']['file']['contentType'].start_with? 'image'
+    end
+
+    unless recipe_json['includes']['Entry'].nil?
+      recipe_json['includes']['Entry'].each do |entry|
+        @recipe.chef_name = entry['fields']['name'] if entry['sys']['contentType']['sys']['id'] == 'chef'
+        @recipe.tags << entry['fields']['name'] if entry['sys']['contentType']['sys']['id'] == 'tag'
+      end
+    end
     @recipe
+  end
+
+  def self.space
+    "kk2bw5ojx476"
   end
 end

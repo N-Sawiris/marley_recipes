@@ -9,6 +9,6 @@ class RecipesController < ApplicationController
   # GET /recipes/1
   # GET /recipes/1.json
   def show
-    @recipe = Recipe.get_recipe
+    @recipe = Recipe.get_recipe(params['id'])
   end
 end
