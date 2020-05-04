@@ -12,6 +12,8 @@ class RecipesController < ApplicationController
   # GET /recipes/1
   # GET /recipes/1.json
   def show
-    @recipe = Recipe.get_recipe(params['id'])
+    id = params['id'].split('*')
+    @recipe = Recipe.get_recipe(id[0])
+    @page = id[1]
   end
 end

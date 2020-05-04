@@ -62,4 +62,8 @@ class Recipe
   def self.space
     "kk2bw5ojx476"
   end
+
+  def tags_to_s
+    tags.join (' - ')
+  end
 end

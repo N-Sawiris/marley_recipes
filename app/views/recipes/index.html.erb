@@ -7,12 +7,12 @@
     <div class="recipe">
       <div class="thumbnail">
         <div class="caption">
-          <%= link_to recipe_path(recipe.image_id) do %>
+          <%= link_to recipe_path("#{recipe.image_id}*#{@page}") do %>
             <%= image_tag(recipe.image, class: "img-responsive img-thumbnail") %>
           <% end %>
-          <h3><%= link_to recipe.title, recipe_path(recipe.image_id) %></h3>
+          <h3><%= link_to recipe.title, recipe_path("#{recipe.image_id}*#{@page}") %></h3>
           <p>
-            <%= link_to 'Show', recipe_path(recipe.image_id), class: "btn btn-default" %>
+            <%= link_to 'Show', recipe_path("#{recipe.image_id}*#{@page}"), class: "btn btn-default" %>
           </p>
         </div>
       </div>
@@ -22,7 +22,7 @@
 <div class="recipes">
   <div>
   <% if @page > 1 %>
-    <%= link_to 'previous Page', recipes_path(page: @page - 1) %> 
+    <%= link_to 'previous Page', recipes_path(page: @page - 1) %>
   <% end %>
   <% if @more_recipes %>
     <%= link_to 'Next Page', recipes_path(page: @page +1) %>
