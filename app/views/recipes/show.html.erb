@@ -3,42 +3,47 @@
   <h1></h1>
   <%= link_to "Back", recipes_path(page: @page), class: "btn btn-default" %>
 </div>
+<% unless @recipe.nil? %>
+  <div class="recipes">
+      <div class="one_recipe">
+        <div class="thumbnail">
+          <div class="caption">
+              <%= image_tag(@recipe.image, class: "img-responsive img-thumbnail") %>
+            <h3><%= @recipe.title %></h3>
+            <table>
+              <tr>
+                <td>
+                 <h5>Tags</h5>
+                </td>
+                <td>
+                  <%= @recipe.tags_to_s %>
+                </td>
 
-<div class="recipes">
-    <div class="one_recipe">
-      <div class="thumbnail">
-        <div class="caption">
-            <%= image_tag(@recipe.image, class: "img-responsive img-thumbnail") %>
-          <h3><%= @recipe.title %></h3>
-          <table>
-            <tr>
-              <td>
-               <h5>Tags</h5>
-              </td>
-              <td>
-                <%= @recipe.tags_to_s %>
-              </td>
+                <tr>
+                  <td>
+                    <h5>Chef</h5>
+                  </td>
+                  <td>
+                    <%=@recipe.chef_name %>
+                  </td>
+                </tr>
 
               <tr>
                 <td>
-                  <h5>Chef</h5>
+                  <h5>Description&nbsp&nbsp</h5>
                 </td>
                 <td>
-                  <%=@recipe.chef_name %>
+                  <%=@recipe.description %>
                 </td>
               </tr>
+            </table>
 
-            <tr>
-              <td>
-                <h5>Description&nbsp&nbsp</h5>
-              </td>
-              <td>
-                <%=@recipe.description %>
-              </td>
-            </tr>
-          </table>
-
+          </div>
         </div>
       </div>
-    </div>
-</div>
+  </div>
+<% else %>
+  <div class="recipe">
+    <h3>No Recipe Found</h3>
+  </div>
+<% end %>
