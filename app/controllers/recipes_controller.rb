@@ -4,7 +4,7 @@ class RecipesController < ApplicationController
   # GET /recipes.json
   def index
     @page = params.fetch(:page, 1).to_i
-    recipes_result = Recipe.get_all_recipes(@page)
+    recipes_result = RecipeGetter.get_all_recipes(@page)
     @recipes = recipes_result[0]
     @more_recipes = recipes_result[1]
   end
@@ -13,7 +13,7 @@ class RecipesController < ApplicationController
   # GET /recipes/1.json
   def show
     id = params['id'].split('*')
-    @recipe = Recipe.get_recipe(id[0])
+    @recipe = RecipeGetter.get_recipe(id[0])
     @page = id[1]
   end
 end

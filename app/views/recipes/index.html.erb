@@ -1,12 +1,20 @@
-<div class="title-container">
-  <h1>Recipes</h1>
-</div>
-
 <% if @recipes.nil? || @recipes.empty? %>
   <div class="recipes">
     <h3>No Recipes Found</h3>
   </div>
 <% else %>
+<div class="title-container">
+  <h1>Recipes</h1>
+
+  <div>
+    <% if @page > 1 %>
+      <%= link_to 'Previous Page', recipes_path(page: @page - 1), class: "btn btn-default" %>
+    <% end %>
+    <% if @more_recipes %>
+      <%= link_to 'Next Page', recipes_path(page: @page +1), class: "btn btn-default" %>
+    <% end %>
+  </div>
+</div>
   <div class="recipes">
     <% @recipes.each do |recipe| %>
       <div class="recipe">
@@ -15,23 +23,25 @@
             <%= link_to recipe_path("#{recipe.image_id}*#{@page}") do %>
               <%= image_tag(recipe.image, class: "img-responsive img-thumbnail") %>
             <% end %>
-            <h3><%= link_to recipe.title, recipe_path("#{recipe.image_id}*#{@page}") %></h3>
+            <h3><pre><%= link_to recipe.title, recipe_path("#{recipe.image_id}*#{@page}") %></pre></h3>
             <p>
-              <%= link_to 'Show', recipe_path("#{recipe.image_id}*#{@page}"), class: "btn btn-default" %>
+              <%= link_to 'Show More', recipe_path("#{recipe.image_id}*#{@page}"), class: "btn btn-default" %>
             </p>
           </div>
         </div>
       </div>
     <% end %>
   </div>
-  <div class="recipes">
+  <div class="title-container">
+    <h1></h1>
     <div>
-    <% if @page > 1 %>
-      <%= link_to 'previous Page', recipes_path(page: @page - 1) %>
-    <% end %>
-    <% if @more_recipes %>
-      <%= link_to 'Next Page', recipes_path(page: @page +1) %>
-    <% end %>
+      <% if @page > 1 %>
+        <%= link_to 'Previous Page', recipes_path(page: @page - 1), class: "btn btn-default" %>
+      <% end %>
+      <% if @more_recipes %>
+        <%= link_to 'Next Page', recipes_path(page: @page +1), class: "btn btn-default" %>
+      <% end %>
     </div>
   </div>
+
 <% end %>
